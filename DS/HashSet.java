@@ -66,35 +66,32 @@ public class HashSet<E> implements Iterable<E> {
   }
 
   private void rehash() {
-    SNode<E>[] oldTab = hashTable;
+    SNode<E>[] oldTable = hashTable;
     hashTable = (SNode<E>[]) new SNode[Math.min(MAX_CAP, 2 * hashTable.length)];
     threshold = (int) (loadFactor * hashTable.length);
-
-    SNode<E> nxt;
-    for (int i = 0, idx; i < oldTab.length; ++i)
-      while (oldTab[i] != null) {
-        idx = hash(oldTab[i].data);
-        nxt = oldTab[i].next;
-        oldTab[i].next = hashTable[idx];
-        hashTable[idx] = oldTab[i];
-        oldTab[i] = nxt;
+    
+    for (SNode<E> node : oldTable) {
+      while (node != null) {
+        add(node.data);
+        
+        node = node.next;
       }
+    }
   }
 
   public boolean add(E item) {
-    if (!contains(item)) {
-      ++sz;
+    if (contains(item)) {
+      return false;
+      
+    ++sz;
 
-      if (hashTable.length < MAX_CAP && sz > threshold)
-        rehash();
+    if (hashTable.length < MAX_CAP && sz > threshold)
+      rehash();
 
-      int idx = hash(item);
-      hashTable[idx] = new SNode<>(item, hashTable[idx]);
+    int idx = hash(item);
+    hashTable[idx] = new SNode<>(item, hashTable[idx]);
 
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
   public boolean contains(E item) {
@@ -113,11 +110,11 @@ public class HashSet<E> implements Iterable<E> {
 
   public boolean remove(E item) {
     int idx = hash(item);
-    boolean del = false;
+    boolean removed = false;
 
     if (Objects.equals(hashTable[idx].data, item)) {
       hashTable[idx] = hashTable[idx].next;
-      del = true;
+      removed = true;
     }
     else {
       SNode<E> trav = hashTable[idx];
@@ -125,7 +122,8 @@ public class HashSet<E> implements Iterable<E> {
       while (trav.next != null) {
         if (Objects.equals(trav.next.data, item)) {
           trav.next = trav.next.next;
-          del = true;
+          
+          removed = true;
 
           break;
         }
@@ -134,10 +132,10 @@ public class HashSet<E> implements Iterable<E> {
       }
     }
 
-    if (del)
+    if (removed)
       --sz;
 
-    return del;
+    return removed;
   }
 
   @Override
