@@ -6,9 +6,9 @@ import nodes.SNode;
 
 public class HashSet<E> implements Iterable<E> {
   private static final int MAX_CAP = 1 << 30;
-  public SNode<E>[] hashTable;
-  int sz, threshold;
-  float loadFactor;
+  private SNode<E>[] hashTable;
+  private int sz, threshold;
+  private float loadFactor;
 
   public HashSet(float loadFactor, int initCap) {
     if (initCap < 0)
@@ -136,6 +136,10 @@ public class HashSet<E> implements Iterable<E> {
       --sz;
 
     return removed;
+  }
+    
+  public int size() {
+    return sz;
   }
 
   @Override
