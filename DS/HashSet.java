@@ -67,7 +67,7 @@ public class HashSet<E> implements Iterable<E> {
 
   private void rehash() {
     SNode<E>[] oldTable = hashTable;
-    hashTable = (SNode<E>[]) new SNode[Math.min(MAX_CAP, 2 * hashTable.length)];
+    hashTable = (SNode<E>[]) new SNode[Math.min(MAX_CAP, 2 * oldTable.length)];
     threshold = (int) (loadFactor * hashTable.length);
     
     for (SNode<E> node : oldTable) {
