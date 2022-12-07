@@ -11,7 +11,7 @@ public class HashSet<E> implements Iterable<E> {
   private float loadFactor;
 
   public HashSet(float loadFactor, int initCap) {
-    if (initCap < 0)
+    if (initCap <= 0)
       throw new IllegalStateException("Not a valid capacity");
 
     this.loadFactor = loadFactor;
