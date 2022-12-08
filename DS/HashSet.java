@@ -82,6 +82,7 @@ public class HashSet<E> implements Iterable<E> {
   public boolean add(E item) {
     if (contains(item)) {
       return false;
+    }
       
     ++sz;
 
