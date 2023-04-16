@@ -1,3 +1,3 @@
 # Data-Structure
 
-An implementation for some famous data structures
+An Implementation for Some Famous Data Structures
