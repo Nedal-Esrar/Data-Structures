@@ -1,9 +1,7 @@
 package DS;
 
 class CircularDeque {
-  private int[] dq;
-  private int front;
-  private int rear;
+  int dq[], front, rear;
 
   public CircularDeque(int k) {
     dq = new int[k];
@@ -11,27 +9,43 @@ class CircularDeque {
   }
 
   public boolean insertFront(int value) {
-    if ((front - 1 + dq.length) % dq.length == rear) {
+    if (isFull()) {
       return false;
     }
 
-    dq[front = front == -1 ? (rear = 0) : (front - 1 + dq.length) % dq.length] = value;
+    if (isEmpty()) {
+      front = rear = 0;
+    } else {
+      front = (front - 1 + dq.length) % dq.length;
+    }
+
+    dq[front] = value;
 
     return true;
   }
 
   public boolean insertLast(int value) {
-    if ((rear + 1) % dq.length == front) return false;
+    if (isFull()) {
+      return false;
+    }
 
-    dq[rear = front == -1 ? (front = 0) : (rear + 1) % dq.length] = value;
+    if (isEmpty()) {
+      front = rear = 0;
+    } else {
+      rear = (rear + 1) % dq.length;
+    }
+
+    dq[rear] = value;
 
     return true;
   }
 
   public boolean deleteFront() {
-    if (front == -1) {
+    if (isEmpty()) {
       return false;
-    } else if (front == rear) {
+    }
+
+    if (front == rear) {
       front = rear = -1;
     } else {
       front = (front + 1) % dq.length;
@@ -41,9 +55,11 @@ class CircularDeque {
   }
 
   public boolean deleteLast() {
-    if (front == -1) {
+    if (isEmpty()) {
       return false;
-    } else if (front == rear) {
+    }
+
+    if (front == rear) {
       front = rear = -1;
     } else {
       rear = (rear - 1 + dq.length) % dq.length;
@@ -53,19 +69,11 @@ class CircularDeque {
   }
 
   public int getFront() {
-    if (front == -1) {
-      return -1;
-    }
-
-    return dq[front];
+    return isEmpty() ? -1 : dq[front];
   }
 
   public int getRear() {
-    if (front == -1) {
-      return -1;
-    }
-
-    return dq[rear];
+    return isEmpty() ? -1 : dq[rear];
   }
 
   public boolean isEmpty() {
@@ -73,6 +81,7 @@ class CircularDeque {
   }
 
   public boolean isFull() {
-    return (front - 1 + dq.length) % dq.length == rear || (rear + 1) % dq.length == front;
+    return (front - 1 + dq.length) % dq.length == rear ||
+        (rear + 1) % dq.length == front;
   }
 }

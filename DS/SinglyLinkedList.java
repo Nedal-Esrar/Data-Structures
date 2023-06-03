@@ -56,6 +56,10 @@ public class SinglyLinkedList<E> implements Iterable<E> {
     E ret;
 
     if (idx == 0) {
+      if (tail == head) {
+        tail = null;
+      }
+
       ret = head.data;
       head = head.next;
     } else {

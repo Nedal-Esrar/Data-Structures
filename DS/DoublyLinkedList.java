@@ -20,12 +20,16 @@ public class DoublyLinkedList<E> implements Iterable<E> {
       throw new IndexOutOfBoundsException();
     } else if (idx == 0) {
       if (head == null) {
-        head = tail = new DNode<>(item, head, null);
+        head = tail = new DNode<>(item);
       } else {
-        head.next.prev = head = new DNode<>(item, head, null);
+        head = new DNode<>(item, head, null);
+
+        head.next.prev = head;
       }
     } else if (idx == sz) {
-      tail.prev.next = tail = new DNode<>(item, null, tail);
+      tail = new DNode<>(item, null, tail);
+
+      tail.prev.next = tail;
     } else {
       DNode<E> trav;
 
@@ -44,7 +48,7 @@ public class DoublyLinkedList<E> implements Iterable<E> {
         }
       }
 
-      trav = new DNode<E>(item, trav, trav.prev);
+      trav = new DNode<>(item, trav, trav.prev);
       trav.next.prev = trav;
       trav.prev.next = trav;
     }
@@ -86,10 +90,14 @@ public class DoublyLinkedList<E> implements Iterable<E> {
 
     if (trav != tail) {
       trav.next.prev = trav.prev;
+    } else {
+      tail = tail.prev;
     }
 
     if (trav != head) {
       trav.prev.next = trav.next;
+    } else {
+      head = head.next;
     }
 
     --sz;

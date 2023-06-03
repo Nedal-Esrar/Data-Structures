@@ -41,7 +41,11 @@ public class Deque<E> {
 
     E ret = front.data;
 
-    (front = front.prev).next = null;
+    if (front == rear) {
+      front = rear = null;
+    } else {
+      (front = front.next).prev = null;
+    }
 
     --sz;
 
@@ -54,7 +58,12 @@ public class Deque<E> {
     }
 
     E ret = rear.data;
-    (rear = rear.next).prev = null;
+
+    if (front == rear) {
+      front = rear = null;
+    } else {
+      (rear = rear.prev).next = null;
+    }
 
     --sz;
 
