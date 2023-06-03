@@ -1,15 +1,16 @@
 package DS;
 
+import nodes.Entry;
+import nodes.HNode;
+
 import java.util.Iterator;
 import java.util.Objects;
-import nodes.HNode;
-import nodes.Entry;
 
 public class HashMap<K, V> implements Iterable<Entry<K, V>> {
   private static final int MAX_CAP = 1 << 30;
-  float loadFactor;
-  int sz, threshold;
-  HNode<K, V>[] hashTable;
+  private float loadFactor;
+  private int sz, threshold;
+  private HNode<K, V>[] hashTable;
 
   public HashMap() {
     this(1.0f, 10);
@@ -37,19 +38,17 @@ public class HashMap<K, V> implements Iterable<Entry<K, V>> {
   }
 
   private void rehash() {
-    HNode<K, V>[] oldTab = hashTable;
+    HNode<K, V>[] oldTable = hashTable;
     hashTable = (HNode<K, V>[]) new HNode[Math.min(MAX_CAP, 2 * hashTable.length)];
     threshold = (int) (loadFactor * hashTable.length);
 
-    HNode<K, V> nxt;
-    for (int i = 0, idx; i < oldTab.length; ++i)
-      while (oldTab[i] != null) {
-        idx = hash(oldTab[i].key);
-        nxt = oldTab[i].next;
-        oldTab[i].next = hashTable[idx];
-        hashTable[idx] = oldTab[i];
-        oldTab[i] = nxt;
+    for (HNode<K, V> node : oldTable) {
+      while (node != null) {
+        put(node.key, node.value);
+
+        node = node.next;
       }
+    }
   }
 
   public int size() {
@@ -60,6 +59,7 @@ public class HashMap<K, V> implements Iterable<Entry<K, V>> {
     int idx = hash(key);
 
     HNode<K, V> trav = hashTable[idx];
+
     while (trav != null) {
       if (Objects.equals(trav.key, key)) {
         trav.value = value;
@@ -72,8 +72,9 @@ public class HashMap<K, V> implements Iterable<Entry<K, V>> {
 
     ++sz;
 
-    if (hashTable.length < MAX_CAP && sz > threshold)
+    if (hashTable.length < MAX_CAP && sz > threshold) {
       rehash();
+    }
   }
 
   public V get(K key) {

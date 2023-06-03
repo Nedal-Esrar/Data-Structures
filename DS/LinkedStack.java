@@ -1,9 +1,10 @@
 package DS;
 
-import java.util.EmptyStackException;
 import nodes.SNode;
 
-public class LStack<E> {
+import java.util.EmptyStackException;
+
+public class LinkedStack<E> {
   private SNode<E> top;
   private int sz;
 
@@ -16,8 +17,9 @@ public class LStack<E> {
   }
 
   public E pop() {
-    if (sz == 0)
+    if (sz == 0) {
       throw new EmptyStackException();
+    }
 
     E ret = top.data;
     top = top.next;
@@ -25,8 +27,9 @@ public class LStack<E> {
   }
 
   public E peek() {
-    if (sz == 0)
+    if (sz == 0) {
       throw new EmptyStackException();
+    }
 
     return top.data;
   }
@@ -37,6 +40,7 @@ public class LStack<E> {
 
     if (sz != 0) {
       sb.append(top.data);
+
       for (SNode<E> trav = top.next; trav != null; trav = trav.next)
         sb.append(", ").append(trav.data);
     }

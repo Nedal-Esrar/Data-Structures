@@ -3,7 +3,7 @@ package DS;
 import java.util.Iterator;
 import nodes.DNode;
 
-public class DLinkedList<E> implements Iterable<E> {
+public class DoublyLinkedList<E> implements Iterable<E> {
   private DNode<E> head, tail;
   private int sz;
 
@@ -16,30 +16,32 @@ public class DLinkedList<E> implements Iterable<E> {
   }
 
   public void add(int idx, E item) {
-    if (idx < 0 || idx > sz)
+    if (idx < 0 || idx > sz) {
       throw new IndexOutOfBoundsException();
-
-    if (idx == 0)
-      if (head == null)
+    } else if (idx == 0) {
+      if (head == null) {
         head = tail = new DNode<>(item, head, null);
-      else
+      } else {
         head.next.prev = head = new DNode<>(item, head, null);
-    else if (idx == sz)
+      }
+    } else if (idx == sz) {
       tail.prev.next = tail = new DNode<>(item, null, tail);
-    else {
+    } else {
       DNode<E> trav;
 
       if (idx > sz / 2) {
         trav = tail;
         idx = sz - 1 - idx;
 
-        while (idx-- != 0)
+        while (idx-- != 0) {
           trav = trav.prev;
+        }
       } else {
         trav = head;
 
-        while (idx-- != 0)
+        while (idx-- != 0) {
           trav = trav.next;
+        }
       }
 
       trav = new DNode<E>(item, trav, trav.prev);
@@ -51,16 +53,17 @@ public class DLinkedList<E> implements Iterable<E> {
   }
 
   public E removeFirst() {
-    return removeByIndex(0);
+    return removeAtIndex(0);
   }
 
   public E removeLast() {
-    return removeByIndex(sz - 1);
+    return removeAtIndex(sz - 1);
   }
 
-  public E removeByIndex(int idx) {
-    if (idx < 0 || idx >= sz)
+  public E removeAtIndex(int idx) {
+    if (idx < 0 || idx >= sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     DNode<E> trav;
 
@@ -68,30 +71,36 @@ public class DLinkedList<E> implements Iterable<E> {
       trav = tail;
       idx = sz - 1 - idx;
 
-      while (idx-- != 0)
+      while (idx-- != 0) {
         trav = trav.prev;
+      }
     } else {
       trav = head;
 
-      while (idx-- != 0)
+      while (idx-- != 0) {
         trav = trav.next;
+      }
     }
 
     E ret = trav.data;
 
-    if (trav != tail)
+    if (trav != tail) {
       trav.next.prev = trav.prev;
-    if (trav != head)
-      trav.prev.next = trav.next;
+    }
 
-    ++sz;
+    if (trav != head) {
+      trav.prev.next = trav.next;
+    }
+
+    --sz;
 
     return ret;
   }
 
   public E get(int idx) {
-    if (idx < 0 || idx >= sz)
+    if (idx < 0 || idx >= sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     DNode<E> trav;
 
@@ -99,21 +108,24 @@ public class DLinkedList<E> implements Iterable<E> {
       trav = tail;
       idx = sz - 1 - idx;
 
-      while (idx-- != 0)
+      while (idx-- != 0) {
         trav = trav.prev;
+      }
     } else {
       trav = head;
 
-      while (idx-- != 0)
+      while (idx-- != 0) {
         trav = trav.next;
+      }
     }
 
     return trav.data;
   }
 
   public void set(int idx, E item) {
-    if (idx < 0 || idx >= sz)
+    if (idx < 0 || idx >= sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     DNode<E> trav;
 
@@ -121,13 +133,15 @@ public class DLinkedList<E> implements Iterable<E> {
       trav = tail;
       idx = sz - 1 - idx;
 
-      while (idx-- != 0)
+      while (idx-- != 0) {
         trav = trav.prev;
+      }
     } else {
       trav = head;
 
-      while (idx-- != 0)
+      while (idx-- != 0) {
         trav = trav.next;
+      }
     }
 
     trav.data = item;
@@ -140,9 +154,11 @@ public class DLinkedList<E> implements Iterable<E> {
   public int indexOf(E item) {
     DNode<E> trav = head;
 
-    for (int i = 0; i < sz; ++i, trav = trav.next)
-      if (trav.data.equals(item))
+    for (int i = 0; i < sz; ++i, trav = trav.next) {
+      if (trav.data.equals(item)) {
         return i;
+      }
+    }
 
     return -1;
   }
@@ -150,9 +166,11 @@ public class DLinkedList<E> implements Iterable<E> {
   public int lastIndexOf(E item) {
     DNode<E> trav = tail;
 
-    for (int i = sz - 1; i > -1; --i, trav = trav.next)
-      if (trav.data.equals(item))
+    for (int i = sz - 1; i > -1; --i, trav = trav.next) {
+      if (trav.data.equals(item)) {
         return i;
+      }
+    }
 
     return -1;
   }
@@ -166,17 +184,21 @@ public class DLinkedList<E> implements Iterable<E> {
     sz = 0;
   }
 
-  public DLinkedList<E> clone() {
-    if (head == null)
-      return new DLinkedList<>();
+  public DoublyLinkedList<E> clone() {
+    if (head == null) {
+      return new DoublyLinkedList<>();
+    }
 
-    DLinkedList<E> clone = new DLinkedList<>();
+    DoublyLinkedList<E> clone = new DoublyLinkedList<>();
 
     DNode<E> t1 = head, t2 = new DNode<>(head.data);
 
     clone.head = t2;
-    while (t1.next != null)
+
+    while (t1.next != null) {
       t2 = t2.next = new DNode<>((t1 = t1.next).data);
+    }
+
     clone.tail = new DNode<>(tail.data);
 
     return clone;

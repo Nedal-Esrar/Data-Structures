@@ -15,28 +15,32 @@ public class Deque<E> {
   }
 
   public void enqueueFront(E item) {
-    if (front == null)
+    if (front == null) {
       front = rear = new DNode<>(item);
-    else
+    } else {
       front = front.prev = new DNode<>(item, front, null);
+    }
 
     ++sz;
   }
 
   public void enqueueRear(E item) {
-    if (rear == null)
+    if (rear == null) {
       front = rear = new DNode<>(item);
-    else
+    } else {
       rear = rear.next = new DNode<>(item, null, rear);
+    }
 
     ++sz;
   }
 
   public E dequeueFront() {
-    if (sz == 0)
+    if (sz == 0) {
       throw new IllegalStateException();
+    }
 
     E ret = front.data;
+
     (front = front.prev).next = null;
 
     --sz;
@@ -45,8 +49,9 @@ public class Deque<E> {
   }
 
   public E dequeueRear() {
-    if (sz == 0)
+    if (sz == 0) {
       throw new IllegalStateException();
+    }
 
     E ret = rear.data;
     (rear = rear.next).prev = null;
@@ -57,15 +62,17 @@ public class Deque<E> {
   }
 
   public E front() {
-    if (sz == 0)
+    if (sz == 0) {
       throw new IllegalStateException();
+    }
 
     return front.data;
   }
 
   public E rear() {
-    if (sz == 0)
+    if (sz == 0) {
       throw new IllegalStateException();
+    }
 
     return rear.data;
   }

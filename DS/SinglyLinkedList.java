@@ -3,7 +3,7 @@ package DS;
 import java.util.Iterator;
 import nodes.SNode;
 
-public class SLinkedList<E> implements Iterable<E> {
+public class SinglyLinkedList<E> implements Iterable<E> {
   private SNode<E> head, tail;
   private int sz;
 
@@ -16,19 +16,24 @@ public class SLinkedList<E> implements Iterable<E> {
   }
 
   public void add(int idx, E item) {
-    if (idx < 0 || idx > sz)
+    if (idx < 0 || idx > sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     if (idx == 0) {
       head = new SNode<>(item, head);
-      if (sz == 0)
+
+      if (sz == 0) {
         tail = head;
-    } else if (idx == sz)
+      }
+    } else if (idx == sz) {
       tail = tail.next = new SNode<>(item);
-    else {
+    } else {
       SNode<E> trav = head;
+
       while (idx-- != 1)
         trav = trav.next;
+
       trav.next = new SNode<>(item, trav.next);
     }
 
@@ -36,16 +41,17 @@ public class SLinkedList<E> implements Iterable<E> {
   }
 
   public E removeFirst() {
-    return removeByIndex(0);
+    return removeAtIndex(0);
   }
 
   public E removeLast() {
-    return removeByIndex(sz - 1);
+    return removeAtIndex(sz - 1);
   }
 
-  public E removeByIndex(int idx) {
-    if (idx < 0 || idx >= sz)
+  public E removeAtIndex(int idx) {
+    if (idx < 0 || idx >= sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     E ret;
 
@@ -54,38 +60,48 @@ public class SLinkedList<E> implements Iterable<E> {
       head = head.next;
     } else {
       SNode<E> trav = head;
-      while (idx-- != 1)
-        trav = trav.next;
 
-      if (trav.next == tail)
+      while (idx-- != 1) {
+        trav = trav.next;
+      }
+
+      if (trav.next == tail) {
         tail = trav;
+      }
 
       ret = trav.data;
       trav.next = trav.next.next;
     }
 
     --sz;
+
     return ret;
   }
 
   public E get(int idx) {
-    if (idx < 0 || idx >= sz)
+    if (idx < 0 || idx >= sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     SNode<E> trav = head;
-    while (idx-- != 0)
+
+    while (idx-- != 0) {
       trav = trav.next;
+    }
 
     return trav.data;
   }
 
   public void set(int idx, E item) {
-    if (idx < 0 || idx >= sz)
+    if (idx < 0 || idx >= sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     SNode<E> trav = head;
-    while (idx-- != 0)
+
+    while (idx-- != 0) {
       trav = trav.next;
+    }
 
     trav.data = item;
   }
@@ -97,9 +113,11 @@ public class SLinkedList<E> implements Iterable<E> {
   public int indexOf(E item) {
     SNode<E> trav = head;
 
-    for (int i = 0; i < sz; ++i, trav = trav.next)
-      if (trav.data.equals(item))
+    for (int i = 0; i < sz; ++i, trav = trav.next) {
+      if (trav.data.equals(item)) {
         return i;
+      }
+    }
 
     return -1;
   }
@@ -107,9 +125,11 @@ public class SLinkedList<E> implements Iterable<E> {
   public int lastIndexOf(E item) {
     int idx = -1, i = 0;
 
-    for (SNode<E> trav = head; i < sz; trav = trav.next, ++i)
-      if (trav.data.equals(item))
+    for (SNode<E> trav = head; i < sz; trav = trav.next, ++i) {
+      if (trav.data.equals(item)) {
         idx = i;
+      }
+    }
 
     return idx;
   }
@@ -123,17 +143,21 @@ public class SLinkedList<E> implements Iterable<E> {
     sz = 0;
   }
 
-  public SLinkedList<E> clone() {
-    if (head == null)
-      return new SLinkedList<>();
+  public SinglyLinkedList<E> clone() {
+    if (head == null) {
+      return new SinglyLinkedList<>();
+    }
 
-    SLinkedList<E> clone = new SLinkedList<>();
+    SinglyLinkedList<E> clone = new SinglyLinkedList<>();
 
     SNode<E> t1 = head, t2 = new SNode<>(head.data);
 
     clone.head = t2;
-    while (t1.next != null)
+
+    while (t1.next != null) {
       t2 = t2.next = new SNode<>((t1 = t1.next).data);
+    }
+
     clone.tail = new SNode<>(tail.data);
 
     return clone;
@@ -149,8 +173,10 @@ public class SLinkedList<E> implements Iterable<E> {
 
     if (sz != 0) {
       sb.append(head.data);
-      for (SNode<E> trav = head.next; trav != null; trav = trav.next)
+
+      for (SNode<E> trav = head.next; trav != null; trav = trav.next) {
         sb.append(", ").append(trav.data);
+      }
     }
 
     return sb.append("]").toString();

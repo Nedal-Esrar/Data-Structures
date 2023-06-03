@@ -1,11 +1,11 @@
 package DS;
 
 import java.util.Iterator;
-import static java.util.Arrays.copyOf;
+
 import static java.lang.System.arraycopy;
+import static java.util.Arrays.copyOf;
 
 public class ArrayList<E> implements Iterable<E> {
-
   private E[] arr;
   private int sz;
 
@@ -34,16 +34,20 @@ public class ArrayList<E> implements Iterable<E> {
   }
 
   public void add(int idx, E item) {
-    if (idx < 0 || idx > sz)
+    if (idx < 0 || idx > sz) {
       throw new IndexOutOfBoundsException();
+    }
 
-    if (sz == arr.length)
+    if (sz == arr.length) {
       arr = copyOf(arr, 2 * sz);
+    }
 
-    if (idx != sz)
+    if (idx != sz) {
       arraycopy(arr, idx, arr, idx + 1, sz - idx);
+    }
 
     arr[idx] = item;
+
     ++sz;
   }
 
@@ -56,13 +60,15 @@ public class ArrayList<E> implements Iterable<E> {
   }
 
   public E removeAtIndex(int idx) {
-    if (idx < 0 || idx >= sz)
+    if (idx < 0 || idx >= sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     E ret = arr[idx];
 
-    if (idx != sz - 1)
+    if (idx != sz - 1) {
       arraycopy(arr, idx + 1, arr, idx, sz - idx);
+    }
 
     arr[--sz] = null;
 
@@ -70,24 +76,29 @@ public class ArrayList<E> implements Iterable<E> {
   }
 
   public boolean removeValue(E item) {
-    for (int i = 0; i < sz; ++i)
+    for (int i = 0; i < sz; ++i) {
       if (arr[i].equals(item)) {
         removeAtIndex(i);
+
         return true;
       }
+    }
+
     return false;
   }
 
   public E get(int idx) {
-    if (idx < 0 || idx >= sz)
+    if (idx < 0 || idx >= sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     return arr[idx];
   }
 
   public void set(int idx, E item) {
-    if (idx < 0 || idx >= sz)
+    if (idx < 0 || idx >= sz) {
       throw new IndexOutOfBoundsException();
+    }
 
     arr[idx] = item;
   }
@@ -97,39 +108,41 @@ public class ArrayList<E> implements Iterable<E> {
   }
 
   public int indexOf(E item) {
-    for (int i = 0; i < sz; ++i)
-      if (arr[i].equals(item))
+    for (int i = 0; i < sz; ++i) {
+      if (arr[i].equals(item)) {
         return i;
+      }
+    }
+
     return -1;
   }
 
   public int lastIndexOf(E item) {
-    for (int i = sz - 1; i > -1; --i)
-      if (arr[i].equals(item))
+    for (int i = sz - 1; i > -1; --i) {
+      if (arr[i].equals(item)) {
         return i;
+      }
+    }
 
     return -1;
   }
 
   public void trimToSize() {
-    if (sz != arr.length)
+    if (sz != arr.length) {
       arr = copyOf(arr, sz);
+    }
   }
 
   public void clear() {
-    for (int i = 0; i < sz; ++i)
+    for (int i = 0; i < sz; ++i) {
       arr[i] = null;
+    }
 
     sz = 0;
   }
 
   public ArrayList<E> clone() {
-    ArrayList<E> clone = new ArrayList<>(sz);
-
-    for (int i = 0; i < sz; ++i)
-      clone.addLast(arr[i]);
-
-    return clone;
+    return new ArrayList<>(this.arr);
   }
 
   public boolean isEmpty() {
@@ -142,6 +155,7 @@ public class ArrayList<E> implements Iterable<E> {
 
     if (sz != 0) {
       sb.append(arr[0]);
+
       for (int i = 1; i < sz; ++i)
         sb.append(", ").append(arr[i]);
     }

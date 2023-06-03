@@ -11,8 +11,9 @@ public class HashSet<E> implements Iterable<E> {
   private float loadFactor;
 
   public HashSet(float loadFactor, int initCap) {
-    if (initCap <= 0)
+    if (initCap <= 0) {
       throw new IllegalStateException("Not a valid capacity");
+    }
 
     this.loadFactor = loadFactor;
     hashTable = (SNode<E>[]) new SNode[initCap];
@@ -86,10 +87,12 @@ public class HashSet<E> implements Iterable<E> {
       
     ++sz;
 
-    if (hashTable.length < MAX_CAP && sz > threshold)
+    if (hashTable.length < MAX_CAP && sz > threshold) {
       rehash();
+    }
 
     int idx = hash(item);
+
     hashTable[idx] = new SNode<>(item, hashTable[idx]);
 
     return true;
@@ -97,11 +100,13 @@ public class HashSet<E> implements Iterable<E> {
 
   public boolean contains(E item) {
     int idx = hash(item);
+
     SNode<E> trav = hashTable[idx];
 
     while (trav != null) {
-      if (Objects.equals(item, trav.data))
+      if (Objects.equals(item, trav.data)) {
         return true;
+      }
 
       trav = trav.next;
     }
@@ -111,13 +116,13 @@ public class HashSet<E> implements Iterable<E> {
 
   public boolean remove(E item) {
     int idx = hash(item);
+
     boolean removed = false;
 
     if (Objects.equals(hashTable[idx].data, item)) {
       hashTable[idx] = hashTable[idx].next;
       removed = true;
-    }
-    else {
+    } else {
       SNode<E> trav = hashTable[idx];
 
       while (trav.next != null) {
@@ -133,14 +138,11 @@ public class HashSet<E> implements Iterable<E> {
       }
     }
 
-    if (removed)
+    if (removed) {
       --sz;
+    }
 
     return removed;
-  }
-    
-  public int size() {
-    return sz;
   }
 
   @Override
@@ -150,8 +152,10 @@ public class HashSet<E> implements Iterable<E> {
 
     if (it.hasNext()) {
       sb.append(it.next());
-      while (it.hasNext())
+
+      while (it.hasNext()) {
         sb.append(", ").append(it.next());
+      }
     }
 
     return sb.append("]").toString();
