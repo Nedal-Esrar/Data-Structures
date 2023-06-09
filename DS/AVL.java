@@ -16,7 +16,7 @@ public class AVL<E extends Comparable<E>> {
   }
 
   private int updateHeight(AVLNode<E> node) {
-    return Math.max(getHeight(node.left), getHeight(node.right)) + 1
+    return Math.max(getHeight(node.left), getHeight(node.right)) + 1;
   }
 
   private AVLNode<E> rotateLeft(AVLNode<E> x) {
