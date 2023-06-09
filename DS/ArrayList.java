@@ -149,6 +149,12 @@ public class ArrayList<E> implements Iterable<E> {
     return sz == 0;
   }
 
+  public void swap(int i, int j) {
+    E tmp = arr[j];
+    arr[j] = arr[i];
+    arr[i] = tmp;
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder("[");
