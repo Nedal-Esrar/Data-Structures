@@ -2,81 +2,166 @@ package DS;
 
 import nodes.AVLNode;
 
-public class AVL<E extends Comparable> {
+public class AVL<E extends Comparable<E>> {
   private AVLNode<E> root;
 
-  private int setHeights(AVLNode<E> node) {
-    if (node == null)
-      return 0;
+  private int size;
 
-    if (node.left == null && node.right == null)
-      return node.height = 1;
-
-    return node.height = 1 + Math.max(setHeights(node.left), setHeights(node.right));
+  private int getHeight(AVLNode<E> node) {
+    return node == null ? 0 : node.height;
   }
 
-  private void rotateLeft(AVLNode<E> x) {
-    AVLNode<E> pX = x.parent, y = x.right, rY = y.right;
-
-    y.parent = pX;
-    if (pX == null)
-      root = y;
-    else if (pX.right == x)
-      pX.right = y;
-    else
-      pX.left = y;
-
-    x.parent = y;
-    y.left = x;
-    if (rY != null)
-      rY.parent = x;
-    x.right = rY;
+  private int getBalanceFactor(AVLNode<E> node) {
+    return node == null ? 0 : getHeight(node.left) - getHeight(node.right);
   }
 
-  private void rotateRight(AVLNode<E> x) {
-    AVLNode<E> pX = x.parent, y = x.left, lY = y.left;
-
-    y.parent = pX;
-    if (pX == null)
-      root = y;
-    else if (pX.left == x)
-      pX.left = y;
-    else
-      pX.right = y;
-
-    x.parent = y;
-    y.right = x;
-    if (lY != null)
-      lY.parent = x;
-    x.left = lY;
+  private int updateHeight(AVLNode<E> node) {
+    return Math.max(getHeight(node.left), getHeight(node.right)) + 1
   }
 
-  private void rebalance(AVLNode<E> node) {
-    int slh, srh,
-        lh = node.left != null ? node.left.height : 0,
-        rh = node.right != null ? node.right.height : 0;
+  private AVLNode<E> rotateLeft(AVLNode<E> x) {
+    AVLNode<E> z = x.right, t2 = z.left;
 
-    AVLNode<E> p = node.parent, n;
+    z.left = x;
+    x.right = t2;
 
-    if (lh - rh > 1) {
-      n = node.left;
-      slh = n.left != null ? n.left.height : 0;
-      srh = n.right != null ? n.right.height : 0;
-      if (srh > slh)
-        rotateLeft(n);
-      rotateRight(node);
-      setHeights(root);
-    } else if (lh - rh < -1) {
-      n = node.right;
-      slh = n.left != null ? n.left.height : 0;
-      srh = n.right != null ? n.right.height : 0;
-      if (slh > srh)
-        rotateRight(n);
-      rotateLeft(node);
-      setHeights(root);
+    x.height = updateHeight(x);
+    z.height = updateHeight(z);
+
+    return z;
+  }
+
+  private AVLNode<E> rotateRight(AVLNode<E> x) {
+    AVLNode<E> z = x.left, t2 = z.right;
+
+    z.right = x;
+    x.left = t2;
+
+    x.height = updateHeight(x);
+    z.height = updateHeight(z);
+
+    return z;
+  }
+
+  private AVLNode<E> balance(AVLNode<E> node) {
+    int bf = getBalanceFactor(node);
+
+    if (bf > 1) {
+      if (getBalanceFactor(node.left) < 0) {
+        node = rotateLeft(node.left);
+      }
+
+      node = rotateRight(node);
+    } else if (bf < -1) {
+      if (getBalanceFactor(node.right) > 0) {
+        node = rotateRight(node.right);
+      }
+
+      node = rotateLeft(node);
     }
 
-    if (p != null)
-      rebalance(p);
+    return node;
+  }
+
+  public boolean insert(E value) {
+    if (this.contains(value)) {
+      return false;
+    }
+
+    root = insert(root, value);
+
+    ++size;
+
+    return true;
+  }
+
+  private AVLNode<E> insert(AVLNode<E> root, E value) {
+    if (root == null) {
+      return new AVLNode<>(value);
+    }
+
+    int cmp = value.compareTo(root.data);
+
+    if (cmp < 0) {
+      root.left = insert(root.left, value);
+    } else {
+      root.right = insert(root.right, value);
+    }
+
+    updateHeight(root);
+
+    return balance(root);
+  }
+
+  public boolean delete(E value) {
+    if (!this.contains(value)) {
+      return false;
+    }
+
+    root = delete(root, value);
+
+    --size;
+
+    return true;
+  }
+
+  private E getMinValue(AVLNode<E> node) {
+    while (node.left != null) {
+      node = node.left;
+    }
+
+    return node.data;
+  }
+
+  private AVLNode<E> delete(AVLNode<E> root, E value) {
+    int cmp = value.compareTo(root.data);
+
+    if (cmp < 0) {
+      root.left = delete(root.left, value);
+    } else if (cmp > 0) {
+      root.right = delete(root.right, value);
+    } else {
+      if (root.left == null && root.right == null) {
+        return null;
+      } else if (root.left == null) {
+        return root.right;
+      } else if (root.right == null) {
+        return root.left;
+      } else {
+        E rightSubtreeMinValue = getMinValue(root.right);
+
+        root.data = rightSubtreeMinValue;
+
+        root.right = delete(root.right, rightSubtreeMinValue);
+      }
+    }
+
+    updateHeight(root);
+
+    return balance(root);
+  }
+
+  public boolean isEmpty() {
+    return size == 0;
+  }
+
+  public boolean contains(E value) {
+    AVLNode<E> trav = root;
+
+    while (trav != null) {
+      int cmp = trav.data.compareTo(value);
+
+      if (trav.data.compareTo(value) == 0) {
+        return true;
+      }
+
+      if (cmp > 0) {
+        trav = trav.left;
+      } else {
+        trav = trav.right;
+      }
+    }
+
+    return false;
   }
 }
