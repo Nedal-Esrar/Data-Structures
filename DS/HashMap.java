@@ -29,7 +29,7 @@ public class HashMap<K, V> implements Iterable<Entry<K, V>> {
       throw new IllegalStateException("Not a valid capacity");
 
     this.loadFactor = loadFactor;
-    hashTable = (HNode<K, V>[]) new HNode[initCap];
+    hashTable = (HNode<K, V>[]) new HNode[Math.min(MAX_CAP, initCap)];
     threshold = (int) (initCap * loadFactor);
   }
 
@@ -39,7 +39,7 @@ public class HashMap<K, V> implements Iterable<Entry<K, V>> {
 
   private void rehash() {
     HNode<K, V>[] oldTable = hashTable;
-    hashTable = (HNode<K, V>[]) new HNode[Math.min(MAX_CAP, 2 * hashTable.length)];
+    hashTable = (HNode<K, V>[]) new HNode[(int) Math.min(MAX_CAP, 2l * hashTable.length)];
     threshold = (int) (loadFactor * hashTable.length);
 
     for (HNode<K, V> node : oldTable) {
