@@ -31,13 +31,15 @@ public class MinBinaryHeap<E extends Comparable<E>> {
     heap.addLast(value);
 
     int idx = heap.size() - 1;
+    
+    int parentIndex = getParentIndex(idx);
 
-    while (idx != 0 && heap.get(idx).compareTo(heap.get(getParentIndex(idx))) < 0) {
-      int parentIndex = getParentIndex(idx);
-
+    while (idx != 0 && heap.get(idx).compareTo(heap.get(parentIndex)) < 0) {
       heap.swap(idx, parentIndex);
 
       idx = parentIndex;
+      
+      parentIndex = getParentIndex(idx);
     }
   }
 
